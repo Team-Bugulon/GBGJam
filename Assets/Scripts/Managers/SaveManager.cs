@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Save_Manager : MonoBehaviour
+public class SaveManager : MonoBehaviour
 {
     //Save system
-    private static Save_Manager _i;
+    private static SaveManager _i;
 
-    public static Save_Manager i
+    public static SaveManager i
     {
         get
         {
@@ -17,7 +17,7 @@ public class Save_Manager : MonoBehaviour
             }
             else
             {
-                return _i = new GameObject("Save_Manager").AddComponent<Save_Manager>();
+                return _i = new GameObject("SaveManager").AddComponent<SaveManager>();
             }
         }
     }
@@ -44,7 +44,7 @@ public class Save_Manager : MonoBehaviour
     public void Save()
     {
         Save_Data data = new Save_Data();
-        //data.highscore = Game_Manager.i.highscore;
+        //data.highscore = GameManager.i.highscore;
 
         string json = JsonUtility.ToJson(data);
         PlayerPrefs.SetString("save", json);
@@ -56,7 +56,7 @@ public class Save_Manager : MonoBehaviour
         {
             string json = PlayerPrefs.GetString("save");
             Save_Data data = JsonUtility.FromJson<Save_Data>(json);
-            //Game_Manager.i.highscore = data.highscore;
+            //GameManager.i.highscore = data.highscore;
         }
         else
         {

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class Sound_Manager : MonoBehaviour
+public class SoundManager : MonoBehaviour
 {
-    private static Sound_Manager _i;
+    private static SoundManager _i;
 
-    public static Sound_Manager i
+    public static SoundManager i
     {
         get
         {
