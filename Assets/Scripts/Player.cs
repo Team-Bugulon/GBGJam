@@ -11,11 +11,13 @@ public class Player : MonoBehaviour
     public float deceleration;
     [Header("Managment")]
     public bool controlsLocked;
+    [Header("Items")]
+    public GameObject spotLight;
 
     Vector2 movementInput;
     Vector2 actualSpeed;
     Rigidbody2D rb;
-    CircleCollider2D cc;
+    BoxCollider2D cc;
 
     public void Move(InputAction.CallbackContext ctx)
     {
@@ -32,7 +34,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        cc = GetComponent<CircleCollider2D>();
+        cc = GetComponent<BoxCollider2D>();
         actualSpeed = Vector2.zero;
     }
     
@@ -44,9 +46,12 @@ public class Player : MonoBehaviour
             speedX = actualSpeed.x + Time.deltaTime * movementInput.x * speed;
         } else
         {
-            speedX = Mathf.Lerp(actualSpeed.x, 0, (deceleration / Time.deltaTime));
-            //speedX = actualSpeed.x - Mathf.Sign(actualSpeed.x) * deceleration * Time.deltaTime;
-            //speedX = 0;
+            if (Mathf.Abs(rb.velocity.x) < .5f)
+            {
+                speedX = 0;
+            } else {
+                speedX = Mathf.Lerp(actualSpeed.x, 0, (deceleration / Time.deltaTime));
+            }
 
         }
         
@@ -55,14 +60,21 @@ public class Player : MonoBehaviour
             speedY = actualSpeed.y + Time.deltaTime * movementInput.y * speed;
         } else
         {
-            //speedY = actualSpeed.y - Mathf.Sign(actualSpeed.y) * deceleration * Time.deltaTime;
-            speedY = Mathf.Lerp(actualSpeed.y, 0, (deceleration / Time.deltaTime));
-            //speedY = 0;
+            if (Mathf.Abs(rb.velocity.y) < .5f)
+            {
+                speedY = 0;
+            }
+            else
+            {
+                speedY = Mathf.Lerp(actualSpeed.y, 0, (deceleration / Time.deltaTime));
+            }
         }
         
         speedX = Mathf.Clamp(speedX, -speedMax, speedMax);
         speedY = Mathf.Clamp(speedY, -speedMax, speedMax);
         actualSpeed = new Vector2(speedX, speedY);
         rb.velocity = actualSpeed;
+
+
     }
 }

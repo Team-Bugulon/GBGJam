@@ -26,4 +26,20 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    public bool gamepad = false;
+
+    public Player player;
+    public GameObject flash;
+
+    public void Flash()
+    {
+        flash.SetActive(true);
+        Invoke("StopFlash", 0.1f);
+    }
+
+    public void StopFlash()
+    {
+        flash.SetActive(false);
+    }
 }
