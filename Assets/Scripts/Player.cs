@@ -75,6 +75,14 @@ public class Player : MonoBehaviour
         actualSpeed = new Vector2(speedX, speedY);
         rb.velocity = actualSpeed;
 
-
+        if (transform.position.y > 0)
+        {
+            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+            if (actualSpeed.y < 0)
+            {
+                actualSpeed.y = 0;
+                rb.velocity = new Vector2(actualSpeed.x, 0);
+            }
+        }
     }
 }

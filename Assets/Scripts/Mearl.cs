@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Mearl : MonoBehaviour
 {
     [SerializeField] List<Sprite> sprites;
 
     SpriteRenderer[] sr;
+
+    public bool uncovered = false;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +23,13 @@ public class Mearl : MonoBehaviour
 
     public void onSnap()
     {
-        Debug.Log("Snap!");
-        GetComponent<SpriteRenderer>().color = Color.red;
+        if (uncovered == false)
+        {
+            Debug.Log("Snap!");
+            GetComponent<SpriteRenderer>().color = Color.red;
+            uncovered = true;
+            transform.DOShakeScale(.5f, .3f, 20);
+        }
+
     }
 }

@@ -42,10 +42,12 @@ public class Cameraman : MonoBehaviour
         cameramanCamera.gameObject.SetActive(true);
         cameramanCamera.Render();
         cameramanCamera.gameObject.SetActive(false);
-        GameManager.i.Flash();
+       
         foreach (var item in ct.ObjectsOnCamera)
         {
             item.Snap();
         }
+        
+        GameManager.i.Flash();
     }
 }

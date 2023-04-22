@@ -79,6 +79,7 @@ public class World : MonoBehaviour
 
     [Header("References")]
     [SerializeField] Tilemap tilemap;
+    [SerializeField] Transform groundAnchor;
 
     [Header("Tiles")]
     [SerializeField] List<TileBase> tiles;
@@ -137,6 +138,10 @@ public class World : MonoBehaviour
         {
             tilemap.SetTile((Vector3Int)(new Vector2Int(x, -depth * 6 - 4)), tiles[0]);
         }
+
+        groundAnchor.position = new Vector3(0, -depth * 6 - 4 + 1, 0);
+
+
     }
 
     void DrawChunk(int chunkPosX, int chunkPosY, LevelsJSON levels)
