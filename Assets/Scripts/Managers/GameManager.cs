@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        float lightIntensity = Mathf.Clamp((player.transform.position.y+4) / (-6 * 6), 0, 1);
+        float lightIntensity = Mathf.Clamp((player.transform.position.y+4) / (-10 * 6), 0, 1);
         globalLight.intensity = Mathf.Clamp(1 - lightIntensity, 0.05f, 1f);
         circleLight.intensity = lightIntensity;
         spotLight.intensity = .5f * lightIntensity;

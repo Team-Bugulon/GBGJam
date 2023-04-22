@@ -42,8 +42,15 @@ public class Cameraman : MonoBehaviour
         cameramanCamera.gameObject.SetActive(true);
         cameramanCamera.Render();
         cameramanCamera.gameObject.SetActive(false);
-       
+
+        //copy list ct.ObjectsOnCamera
+        List<Snappable> objectsOnCamera = new List<Snappable>();
         foreach (var item in ct.ObjectsOnCamera)
+        {
+            objectsOnCamera.Add(item);
+        }
+
+        foreach (var item in objectsOnCamera)
         {
             item.Snap();
         }
