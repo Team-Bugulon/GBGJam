@@ -31,7 +31,7 @@ public class Cameraman : MonoBehaviour
         GameManager.i.player.spotLight.transform.localRotation = Quaternion.Euler(0, 0, Mathf.Atan2(mousePosition.y, mousePosition.x) * Mathf.Rad2Deg - 90);
 
         //if left click
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !GameManager.i.player.stunned)
         {
             Snap();
         }

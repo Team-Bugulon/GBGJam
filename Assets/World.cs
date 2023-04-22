@@ -80,9 +80,19 @@ public class World : MonoBehaviour
     [Header("References")]
     [SerializeField] Tilemap tilemap;
     [SerializeField] Transform groundAnchor;
+    [SerializeField] Transform bgContainer;
+
+    [Header("Prefabs")]
+    [SerializeField] GameObject BG;
+    [SerializeField] List<Sprite> BGSprites;
 
     [Header("Tiles")]
     [SerializeField] List<TileBase> tiles;
+
+    [Header("ColorTabs")]
+    [SerializeField] List<Color> colorDay;
+    [SerializeField] List<Color> colorNight;
+    [SerializeField] List<Color> colorEvening;
 
     List<List<Chunk>> chunks;
     Vector2Int startingChunk;
@@ -124,7 +134,25 @@ public class World : MonoBehaviour
         collider.usedByComposite = false;
         collider.usedByComposite = true;
 
-        
+        //Empty BG Container
+        foreach (Transform child in bgContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        //Set BG
+        for (int y = 0; y < Mathf.RoundToInt(depth/2) + 1; y++)
+        {
+            var bg = Instantiate(BG, bgContainer);
+            bg.transform.position = new Vector3(0, -y * 6 * 2 - 8, 0);
+            var sr = bg.GetComponentsInChildren<SpriteRenderer>();
+            sr[1].sprite = BGSprites[Random.Range(0, BGSprites.Count)];
+            Color cooler = colorDay[Mathf.Min(y + 1, colorDay.Count - 1)];
+            sr[0].color = cooler;
+            sr[1].color = cooler;
+            sr[0].sortingOrder += y;
+            sr[1].sortingOrder += y;
+        }
     }
 
     void WorldBorders()
@@ -202,6 +230,10 @@ public class World : MonoBehaviour
                 } else if (selectedLevel.level[readX + y * 6] == 'o')
                 {
                     tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[2]);
+                }
+                else if (selectedLevel.level[readX + y * 6] == 'x')
+                {
+                    tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[3]);
                 }
             }
         }

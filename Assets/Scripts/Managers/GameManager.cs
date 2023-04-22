@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 using UnityEngine.Rendering.Universal;
@@ -30,6 +31,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public enum DayTime
+    {
+        Day,
+        Night,
+        Evening
+    };
+
+
     public bool gamepad = false;
 
     [Header("Gameplay")]
@@ -38,6 +47,7 @@ public class GameManager : MonoBehaviour
     public float lifetimeMax = 5f;
     public float lifetime = 0f;
     public bool playerUnderwater;
+    public DayTime timeOfDay;
 
     [Header("References")]
     public Player player;
@@ -53,6 +63,7 @@ public class GameManager : MonoBehaviour
         flash.SetActive(true);
         Invoke("StopFlash", 0.1f);
         UIManager.i.Snap();
+        UIManager.i.cursorSprite.sprite = UIManager.i.cursorSprites[1];
 
         //find all the objects with the tag mearl
         GameObject[] mearls = GameObject.FindGameObjectsWithTag("Mearl");
@@ -68,19 +79,26 @@ public class GameManager : MonoBehaviour
             }
         }
         uncoveredReal = (float)uncoveredCount / (float)totalCount;
+
+        if (uncovered != uncoveredReal)
+        {
+            UIManager.i.boatui.gameObject.SetActive(true);
+        }
     }
 
     public void StopFlash()
     {
         flash.SetActive(false);
+        UIManager.i.cursorSprite.sprite = UIManager.i.cursorSprites[0];
     }
 
     private void Update()
     {
-        float lightIntensity = Mathf.Clamp(player.transform.position.y / (-6 * 6), 0, 1);
+        float lightIntensity = Mathf.Clamp((player.transform.position.y+4) / (-6 * 6), 0, 1);
         globalLight.intensity = Mathf.Clamp(1 - lightIntensity, 0.05f, 1f);
         circleLight.intensity = lightIntensity;
         spotLight.intensity = .5f * lightIntensity;
+        Camera.main.transform.position = new Vector3(0, Camera.main.transform.position.y, -10);
     }
 
     private void FixedUpdate()
@@ -97,6 +115,7 @@ public class GameManager : MonoBehaviour
             //UIManager.i.batteryMain.transform.localPosition = new Vector2(-10.375f, 5f);
             UIManager.i.batteryTransform.localPosition = Vector2.zero;
             UIManager.i.batteryTransform.localRotation = Quaternion.identity;
+            //UIManager.i.GiveBackPics();
         }
 
         if (playerUnderwater)
@@ -109,7 +128,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            lifetime = 0;
+            lifetime = Mathf.Max(0, lifetime - 10 * Time.deltaTime);
         }
 
         float health = Mathf.Clamp(lifetime / lifetimeMax, 0, 1);
@@ -127,5 +146,25 @@ public class GameManager : MonoBehaviour
     void GameOver()
     {
         
+    }
+
+    public void Restart()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
+    public void ShakeScreen(float duration = .35f, float strength = 5f, int vibrato = 20, DG.Tweening.Ease ease = Ease.OutExpo)
+    {
+        Camera.main.transform.parent.DOComplete();
+        Camera.main.transform.parent.DOShakeRotation(duration, strength, vibrato).SetEase(ease).OnComplete(() => {
+            //mainCamera.transform.parent.rotation = Quaternion.Euler(Vector3.zero);
+            Camera.main.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            Camera.main.transform.position = new Vector3(0, Camera.main.transform.position.y, -10);
+        });
     }
 }

@@ -13,7 +13,6 @@ public class CameraTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("WAGOGOUS");
         //if is not in list
         if (!ObjectsOnCamera.Contains(collision.gameObject.GetComponentInChildren<Snappable>()))
         {
