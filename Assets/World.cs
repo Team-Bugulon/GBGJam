@@ -13,6 +13,7 @@ public class Chunk
     public bool Left = false;
     public bool Right = false;
     public bool WalkerVisited = false;
+    public bool FlowerChunk = false;
 }
 
 public class Level
@@ -24,6 +25,7 @@ public class Level
     public int right;
     public string level = ":)";
     public bool flipped = false;
+    public int flower;
 }
 
 public class LevelsJSON
@@ -55,6 +57,7 @@ public class LevelsJSON
             flippedLayout.right = layout.left;
             flippedLayout.level = layout.level;
             flippedLayout.flipped = true;
+            flippedLayout.flower = layout.flower;
 
             flippedLayouts.Add(flippedLayout);
         }
@@ -137,7 +140,7 @@ public class World : MonoBehaviour
         //Empty BG Container
         foreach (Transform child in bgContainer)
         {
-            Destroy(child.gameObject);
+            DestroyImmediate(child.gameObject);
         }
 
         //Set BG
@@ -153,6 +156,8 @@ public class World : MonoBehaviour
             sr[0].sortingOrder += y;
             sr[1].sortingOrder += y;
         }
+
+        if (GameObject.FindGameObjectsWithTag("Mearl").Length < 7) GenerateWorld();
     }
 
     void WorldBorders()
@@ -204,6 +209,11 @@ public class World : MonoBehaviour
                 consider = false;
             }
 
+            if (chunks[chunkPosY][chunkPosX].FlowerChunk && lvl.flower == 0)
+            {
+                consider = false;
+            }
+
             if (consider)
             {
                 filteredChunk.Add(lvl);
@@ -234,6 +244,14 @@ public class World : MonoBehaviour
                 else if (selectedLevel.level[readX + y * 6] == 'x')
                 {
                     tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[3]);
+                }
+                else if (selectedLevel.level[readX + y * 6] == 'y' && (chunks[chunkPosY][chunkPosX].FlowerChunk || Random.Range(0, 10) == 0))
+                {
+                    tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[4]);
+                }
+                else if (selectedLevel.level[readX + y * 6] == 'u')
+                {
+                    tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[5]);
                 }
             }
         }
@@ -310,6 +328,11 @@ public class World : MonoBehaviour
                         {
                             chunks[y][randomX].Right = true;
                             chunks[y][randomX + 1].Left = true;
+                        }
+
+                        if (visitedOnLine == 0 && y > 2 && y % 3 == 0)
+                        {
+                            chunks[y][randomX].FlowerChunk = true;
                         }
 
                         visitedOnLine += 1;

@@ -167,4 +167,9 @@ public class GameManager : MonoBehaviour
             Camera.main.transform.position = new Vector3(0, Camera.main.transform.position.y, -10);
         });
     }
+
+    public void Recharge()
+    {
+        lifetime = 0;
+    }
 }
