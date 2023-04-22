@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Linq;
+using Newtonsoft.Json;
 
 public class Chunk
 {
@@ -14,13 +15,6 @@ public class Chunk
     public bool WalkerVisited = false;
 }
 
-[System.Serializable]
-public class SerializableList<T>
-{
-    public List<T> list;
-}
-
-[System.Serializable]
 public class Level
 {
     public int diff;
@@ -28,16 +22,13 @@ public class Level
     public int down;
     public int left;
     public int right;
-    public string level;
+    public string level = ":)";
+    public bool flipped = false;
 }
 
-[System.Serializable]
 public class LevelsJSON
 {
-    //[System.Serializable]
-
-
-    public Level[] levels;
+    public List<Level> levels;
     public List<int> magrit;
     public string name;
 
@@ -46,16 +37,34 @@ public class LevelsJSON
         string targetFile = Resources.Load<TextAsset>(jsonString).ToString();
 
         //remove every space and newline
-        targetFile = targetFile.Replace("\r", "").Replace("\n", "").Replace(" ","");
+        targetFile = targetFile.Replace("\r", "").Replace("\n", "").Replace(" ", "");
 
         Debug.Log("AMOONGUS " + targetFile);
 
-        //return new LevelsJSON();
+        LevelsJSON lvl = JsonConvert.DeserializeObject<LevelsJSON>(targetFile);
 
-        //var ret = new LevelsJSON();
-        //ret.levels = new List<LevelJSON>();
+        //for each level add their flipped counter part
+        List<Level> flippedLayouts = new List<Level>();
+        foreach(var layout in lvl.levels)
+        {
+            var flippedLayout = new Level();
+            flippedLayout.diff = layout.diff;
+            flippedLayout.top = layout.top;
+            flippedLayout.down = layout.down;
+            flippedLayout.left = layout.right;
+            flippedLayout.right = layout.left;
+            flippedLayout.level = layout.level;
+            flippedLayout.flipped = true;
 
-        return JsonUtility.FromJson<LevelsJSON>(targetFile);
+            flippedLayouts.Add(flippedLayout);
+        }
+
+        foreach(var fl in flippedLayouts)
+        {
+            lvl.levels.Add(fl);
+        }
+
+        return lvl;
     }
 }
 
@@ -71,7 +80,11 @@ public class World : MonoBehaviour
     [Header("References")]
     [SerializeField] Tilemap tilemap;
 
+    [Header("Tiles")]
+    [SerializeField] List<TileBase> tiles;
+
     List<List<Chunk>> chunks;
+    Vector2Int startingChunk;
 
     private void GenerateWorld()
     {
@@ -86,109 +99,190 @@ public class World : MonoBehaviour
             }
         }
 
-        Vector2Int startingChunk = new Vector2Int(Random.Range(0, 3), 0);
+        Walker();
 
-        chunks[startingChunk.y][startingChunk.x].WalkerVisited = true;
+        //Load JSON
+        var Levels = LevelsJSON.CreateFromJSON();
 
-        //while not every chunk has been visited
-        while (chunks.Any(y => y.Any(x => x.WalkerVisited == false)))
+        //Clear tilemap
+        tilemap.ClearAllTiles();
+
+        for (int x = 0; x < 4; x++)
         {
-            //pick a random chunk
-            Vector2Int currentChunk = new Vector2Int(Random.Range(0, 3), Random.Range(0, depth - 1));
-
-            //if it has been visited, skip it
-            if (chunks[currentChunk.y][currentChunk.x].WalkerVisited)
-                continue;
-
-            //if it hasn't been visited, mark it as visited
-            chunks[currentChunk.y][currentChunk.x].WalkerVisited = true;
-
-            //pick a random direction
-            int direction = Random.Range(0, 4);
-
-            //if the direction is up
-            if (direction == 0)
-            {
-                //if the chunk is at the top, skip it
-                if (currentChunk.y == depth - 1)
-                    continue;
-
-                //if the chunk is not at the top, mark it as up
-                chunks[currentChunk.y][currentChunk.x].Up = true;
-
-                //mark the chunk above it as down
-                chunks[currentChunk.y + 1][currentChunk.x].Down = true;
-            }
-
-            //if the direction is down
-            if (direction == 1)
-            {
-                //if the chunk is at the bottom, skip it
-                if (currentChunk.y == 0)
-                    continue;
-
-                //if the chunk is not at the bottom, mark it as down
-                chunks[currentChunk.y][currentChunk.x].Down = true;
-
-                //mark the chunk below it as up
-                chunks[currentChunk.y - 1][currentChunk.x].Up = true;
-            }
-
-            //if the direction is left
-            if (direction == 2)
-            {
-                //if the chunk is at the left, skip it
-                if (currentChunk.x == 0)
-                    continue;
-
-                //if the chunk is not at the left, mark it as left
-                chunks[currentChunk.y][currentChunk.x].Left = true;
-
-                //mark the chunk to the left of it as right
-                chunks[currentChunk.y][currentChunk.x - 1].Right = true;
-            }
-
-            //if the direction is right
-            if (direction == 3)
-            {
-                //if the chunk is at the right, skip it
-                if (currentChunk.x == 3)
-                    continue;
-
-                //if the chunk is not at
-            }
-
-            //Load JSON
-            var Levels = LevelsJSON.CreateFromJSON();
-            Debug.Log(Levels.name + " " + Levels.magrit);
-
-            int chunkID = 0;
-
             for (int y = 0; y < depth; y++)
             {
-                for (int x = 0; x < 4; x++)
-                {
-                    Vector2Int chunkPos = new Vector2Int(x, y);
-                    DrawChunk(chunkPos, Levels.levels[chunkID]);
-                }
-            }
+                //DrawChunk(x, y, Levels.levels[Random.Range(0, Levels.levels.Count)]);
+                DrawChunk(x, y, Levels);
 
+            }
+        }
+
+        WorldBorders();
+
+        var collider = tilemap.GetComponent<TilemapCollider2D>();
+        collider.usedByComposite = false;
+        collider.usedByComposite = true;
+
+        
+    }
+
+    void WorldBorders()
+    {
+        for (int y = -4; y < depth*6; y++)
+        {
+            tilemap.SetTile((Vector3Int)(new Vector2Int(-6 * 2 - 1, -y - 4)), tiles[0]);
+            tilemap.SetTile((Vector3Int)(new Vector2Int(6 * 2, -y - 4)), tiles[0]);
+        }
+        for (int x = - 6 * 2 - 1; x < 6*2 + 1; x++)
+        {
+            tilemap.SetTile((Vector3Int)(new Vector2Int(x, -depth * 6 - 4)), tiles[0]);
         }
     }
 
-    public List<TileBase> tiles;
-
-    void DrawChunk(Vector2Int chunkPos, Level level)
+    void DrawChunk(int chunkPosX, int chunkPosY, LevelsJSON levels)
     {
-        Vector2Int worldChunkPos = chunkPos * 6;
+        if (startingChunk.x == chunkPosX && startingChunk.y == chunkPosY) return;
+        var filteredChunk = new List<Level>();
+        foreach (var lvl in levels.levels)
+        {
+            bool consider = true;
+            if (chunks[chunkPosY][chunkPosX].Up && lvl.top == 0)
+            {
+                consider = false;
+            }
+            
+            if (chunks[chunkPosY][chunkPosX].Down && lvl.down == 0)
+            {
+                consider = false;
+            }
+
+            if (chunks[chunkPosY][chunkPosX].Left && lvl.left == 0)
+            {
+                consider = false;
+            }
+
+            if (chunks[chunkPosY][chunkPosX].Right && lvl.right == 0)
+            {
+                consider = false;
+            }
+
+            if (Mathf.FloorToInt(chunkPosY/2) + difficulty < lvl.diff)
+            {
+                consider = false;
+            }
+
+            if (consider)
+            {
+                filteredChunk.Add(lvl);
+            }
+        }
+
+        Level selectedLevel = filteredChunk[Random.Range(0, filteredChunk.Count)];
+
+        Vector2Int worldChunkPos = new Vector2Int(chunkPosX * 6, - chunkPosY * 6) +  Vector2Int.left * 6*2 + Vector2Int.down * 4;
 
         for (int y = 0; y < 6; y++)
         {
             for (int x = 0; x < 6; x++)
             {
-                tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, y)), tiles[0]);
+                int readX = x;
+                if (selectedLevel.flipped)
+                {
+                    readX = 5 - x;
+                }
+
+                if (selectedLevel.level[readX + y*6] == '#')
+                {
+                    tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[1]);
+                } else if (selectedLevel.level[readX + y * 6] == 'o')
+                {
+                    tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[2]);
+                }
             }
         }
     }
+    
+    void Walker()
+    {
+        startingChunk = new Vector2Int(Random.Range(0, 3), 0);
+        chunks[startingChunk.y][startingChunk.x].WalkerVisited = true;
 
+        int visitedOnLine = 1;
+
+        for (int y = 0; y<depth; y++)
+        {
+            while (visitedOnLine < 4)
+            {
+                int randomX = Random.Range(0, 4);
+                if (chunks[y][randomX].WalkerVisited == false)
+                {
+                    //check for neighbors
+                    bool neiLeft = false;
+                    bool neiRight = false;
+                    bool neiTop = false;
+                    List<string> dirs = new List<string>();
+
+                    //top
+                    if (y != 0)
+                    {
+                        if (chunks[y-1][randomX].WalkerVisited == true)
+                        {
+                            neiTop = true;
+                            dirs.Add("Top");
+                        }
+                    }
+
+                    //left
+                    if (randomX > 0)
+                    {
+                        if (chunks[y][randomX - 1].WalkerVisited == true)
+                        {
+                            neiLeft = true;
+                            dirs.Add("Left");
+                            //dirs.Add("Left");
+                        }
+                    }
+
+                    //right
+                    if (randomX < 3)
+                    {
+                        if (chunks[y][randomX + 1].WalkerVisited == true)
+                        {
+                            neiRight = true;
+                            dirs.Add("Right");
+                            //dirs.Add("Right");
+                        }
+                    }
+
+                    if (dirs.Count > 0)
+                    {
+                        string dir = dirs[Random.Range(0, dirs.Count)];
+
+                        if (dir == "Top")
+                        {
+                            chunks[y][randomX].Up = true;
+                            chunks[y - 1][randomX].Down = true;
+
+                        }
+                        else if (dir == "Left")
+                        {
+                            chunks[y][randomX].Left = true;
+                            chunks[y][randomX - 1].Right = true;
+                        }
+                        else if (dir == "Right")
+                        {
+                            chunks[y][randomX].Right = true;
+                            chunks[y][randomX + 1].Left = true;
+                        }
+
+                        visitedOnLine += 1;
+                        chunks[y][randomX].WalkerVisited = true;
+                    }
+
+                }
+            }
+            visitedOnLine = 0;
+        }
+
+    }
 }

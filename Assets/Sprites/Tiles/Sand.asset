@@ -12,7 +12,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d1514134bc4fbd41bb739b1b9a49231, type: 3}
   m_Name: Sand
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 21300000, guid: cd710fcdc8905dd4da6f0e34a81affdd, type: 3}
-  m_DefaultGameObject: {fileID: 0}
+  m_DefaultSprite: {fileID: 358377549, guid: 3299ecda34c8f6245b4f59a37b24b926, type: 3}
+  m_DefaultGameObject: {fileID: 265548294282471100, guid: 3e2a95f1d0254fb458b1385d99acec62, type: 3}
   m_DefaultColliderType: 2
-  m_TilingRules: []
+  m_TilingRules:
+  - m_Id: 0
+    m_Sprites:
+    - {fileID: 358377549, guid: 3299ecda34c8f6245b4f59a37b24b926, type: 3}
+    - {fileID: 358377549, guid: 3299ecda34c8f6245b4f59a37b24b926, type: 3}
+    - {fileID: 358377549, guid: 3299ecda34c8f6245b4f59a37b24b926, type: 3}
+    - {fileID: -416288373, guid: 3299ecda34c8f6245b4f59a37b24b926, type: 3}
+    - {fileID: -380314647, guid: 3299ecda34c8f6245b4f59a37b24b926, type: 3}
+    m_GameObject: {fileID: 265548294282471100, guid: 3e2a95f1d0254fb458b1385d99acec62, type: 3}
+    m_MinAnimationSpeed: 1
+    m_MaxAnimationSpeed: 1
+    m_PerlinScale: 0.4
+    m_Output: 1
+    m_ColliderType: 2
+    m_RandomTransform: 0
+    m_Neighbors: 
+    m_NeighborPositions:
+    - {x: -1, y: 1, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 1, y: 1, z: 0}
+    - {x: -1, y: 0, z: 0}
+    - {x: 1, y: 0, z: 0}
+    - {x: -1, y: -1, z: 0}
+    - {x: 0, y: -1, z: 0}
+    - {x: 1, y: -1, z: 0}
+    m_RuleTransform: 0
