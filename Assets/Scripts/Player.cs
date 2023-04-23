@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
     SpriteRenderer sr;
 
     bool gameover = false;
-
+    bool win = false;
     public void Move(InputAction.CallbackContext ctx)
     {
         if (ctx.performed && !controlsLocked)
@@ -52,7 +52,11 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (gameover)
+        if (win)
+        {
+            sr.sprite = sprites[2];
+        }
+        else if (gameover)
         {
             sr.sprite = sprites[3];
         }
@@ -138,13 +142,26 @@ public class Player : MonoBehaviour
 
     public void GameOver()
     {
-        if (gameover == false)
+        if (gameover == false && win == false)
         {
             movementInput = Vector2.zero;
             controlsLocked = true;
             gameover = true;
             GameManager.i.ShakeScreen();
             spotLight.SetActive(false);
+            UIManager.i.cursorSprite.enabled = false;
+            transform.DOShakeScale(.6f, .5f, 20);
+        }
+    }
+
+    public void Win()
+    {
+        if (win == false)
+        {
+            win = true;
+            movementInput = Vector2.zero;
+            spotLight.SetActive(false);
+            controlsLocked = true;
             UIManager.i.cursorSprite.enabled = false;
             transform.DOShakeScale(.6f, .5f, 20);
         }

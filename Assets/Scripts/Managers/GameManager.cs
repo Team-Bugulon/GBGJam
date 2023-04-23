@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour
 
 
     bool gameover = false;
+    bool win = false;
 
     public void Flash()
     {
@@ -150,7 +151,7 @@ public class GameManager : MonoBehaviour
     public int score;
     void GameOver()
     {
-        if (gameover == false)
+        if (gameover == false && win == false)
         {
             gameover = true;
 
@@ -177,6 +178,24 @@ public class GameManager : MonoBehaviour
                     Time.timeScale = 0;
                     UIManager.i.GameOverScreen();
                 }
+            );
+        }
+        
+    }
+
+    public void Win()
+    {
+        if (win == false)
+        {
+            win = true;
+            player.Win();
+            var sequence = DOTween.Sequence();
+            sequence.AppendInterval(2f);
+            sequence.OnComplete(() =>
+            {
+                Time.timeScale = 0;
+                TransitionManager.i.NextLevel();
+            }
             );
         }
         

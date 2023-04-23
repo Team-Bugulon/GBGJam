@@ -210,6 +210,11 @@ public class UIManager : MonoBehaviour
         GameManager.i.uncovered = GameManager.i.uncoveredReal;
         UIManager.i.boatui.gameObject.SetActive(false);
         givebackpicsbool = false;
+
+        if (GameManager.i.uncovered >= .99f)
+        {
+            GameManager.i.Win();
+        }
     }
 
     void UpdatePercCount(int uncoveredPerc)

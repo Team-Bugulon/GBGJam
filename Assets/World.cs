@@ -295,7 +295,7 @@ public class World : MonoBehaviour
                     readX = 5 - x;
                 }
 
-                if (selectedLevel.level[readX + y*6] == '#')
+                if (selectedLevel.level[readX + y * 6] == '#')
                 {
                     if (chunkPosY < 4)
                     {
@@ -305,14 +305,14 @@ public class World : MonoBehaviour
                         tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[7]);
                     } else
                     {
-                        if (Random.Range(0,2) == 0)
+                        if (Random.Range(0, 2) == 0)
                         {
                             tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[1]);
                         } else
                         {
                             tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[7]);
                         }
-                        
+
                     }
 
 
@@ -324,7 +324,7 @@ public class World : MonoBehaviour
                 {
                     tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[3]);
                 }
-                else if (selectedLevel.level[readX + y * 6] == 'y' && (chunks[chunkPosY][chunkPosX].FlowerChunk || Random.Range(0, 10) == 0))
+                else if (selectedLevel.level[readX + y * 6] == 'y' && (chunks[chunkPosY][chunkPosX].FlowerChunk || Random.Range(0, 10) == 0) && TransitionManager.i.Level != 0)
                 {
                     tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[4]);
                 }
