@@ -222,7 +222,8 @@ public class World : MonoBehaviour
         }
 
         if (GameObject.FindGameObjectsWithTag("Mearl").Length < 7) GenerateWorld();
-        TransitionManager.i.TransiOut();
+        
+        TransitionManager.i.TransiOut(1f);
     }
 
     void WorldBorders()

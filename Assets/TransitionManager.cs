@@ -47,12 +47,15 @@ public class TransitionManager : MonoBehaviour
         transi.DOMoveX(0, 1.5f).SetEase(Ease.InOutCubic).SetUpdate(true);
     }
 
-    public void TransiOut()
+    public void TransiOut(float wait = 0f)
     {
         Time.timeScale = 1;
         transi.DOKill();
         transi.position = new Vector2(0, Camera.main.transform.position.y);
-        transi.DOMoveX(-40, 1.5f).SetEase(Ease.InOutCirc).SetUpdate(true);
+        var sequence = DOTween.Sequence();
+        sequence.AppendInterval(wait);
+        sequence.Append(transi.DOMoveX(-40, 1.5f).SetEase(Ease.InOutCirc).SetUpdate(true));
+        
     }
 
     public void NextLevel()
@@ -72,7 +75,7 @@ public class TransitionManager : MonoBehaviour
         TransiIn();
         yield return new WaitForSecondsRealtime(2f);
         //reload scene
-        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
         //TransiOut();
     }
 
@@ -88,6 +91,6 @@ public class TransitionManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(2f);
         //reload scene
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
-        TransiOut();
+        TransiOut(1f);
     }
 }

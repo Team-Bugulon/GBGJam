@@ -20,6 +20,9 @@ public class RestartBtn : MonoBehaviour
                 case 1:
                     TransitionManager.i.MainMenu();
                     break;
+                case 2:
+                    TransitionManager.i.LoadLevel(0);
+                    break;
             }
         }
 
