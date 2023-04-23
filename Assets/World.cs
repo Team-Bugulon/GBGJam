@@ -149,6 +149,10 @@ public class World : MonoBehaviour
                 whateverBG.GetComponent<SpriteRenderer>().color = colorNight[0];
                 break;
         }
+        foreach (var txt in UIManager.i.LevelCounter.GetComponentsInChildren<TMPro.TextMeshPro>())
+        {
+            txt.text = (TransitionManager.i.Level + 1).ToString();
+        }
 
         chunks = new List<List<Chunk>>();
 

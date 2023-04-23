@@ -239,6 +239,20 @@ public class UIManager : MonoBehaviour
     public Transform GO_text2;
     public Transform GO_Buttons;
 
+    [Header("LevelCounter")]
+    public Transform LevelCounter;
+
+    bool byeCounter = false;
+    public void ByeCounter()
+    {
+        if (byeCounter == false)
+        {
+            byeCounter = true;
+            LevelCounter.DOLocalMoveY(4, 1.5f).SetEase(Ease.InBack);
+        }
+    }
+
+
     public void GameOverScreen()
     {
         GO_BG.color = new Color(0, 0, 0, 0);

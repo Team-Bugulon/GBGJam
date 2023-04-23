@@ -112,6 +112,7 @@ public class GameManager : MonoBehaviour
         {
             playerUnderwater = true;
             UIManager.i.batteryTransform.transform.DOShakeRotation(.5f, .75f, 20).SetEase(Ease.OutCubic).SetLoops(-1);
+            UIManager.i.ByeCounter();
         }
         else if (player.transform.position.y >= -4 && playerUnderwater == true)
         {
@@ -190,10 +191,11 @@ public class GameManager : MonoBehaviour
             win = true;
             player.Win();
             var sequence = DOTween.Sequence();
-            sequence.AppendInterval(2f);
+            sequence.AppendInterval(.8f);
+            sequence.Append(player.transform.parent.DOScale(2f, 1.75f).SetEase(Ease.InOutQuart));
             sequence.OnComplete(() =>
             {
-                Time.timeScale = 0;
+                //Time.timeScale = 0;
                 TransitionManager.i.NextLevel();
             }
             );
