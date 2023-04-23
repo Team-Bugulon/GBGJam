@@ -21,7 +21,7 @@ public class UIManager : MonoBehaviour
         if (_i == null)
         {
             _i = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {

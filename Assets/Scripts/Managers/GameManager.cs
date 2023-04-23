@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
         if (_i == null)
         {
             _i = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
     public Light2D circleLight;
 
 
+    bool gameover = false;
 
     public void Flash()
     {
@@ -94,11 +95,14 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        float lightIntensity = Mathf.Clamp((player.transform.position.y+4) / (-10 * 6), 0, 1);
-        globalLight.intensity = Mathf.Clamp(1 - lightIntensity, 0.05f, 1f);
-        circleLight.intensity = lightIntensity;
-        spotLight.intensity = .5f * lightIntensity;
-        Camera.main.transform.position = new Vector3(0, Camera.main.transform.position.y, -10);
+        if (gameover == false)
+        {
+            float lightIntensity = Mathf.Clamp((player.transform.position.y + 4) / (-10 * 6), 0, 1);
+            globalLight.intensity = Mathf.Clamp(1 - lightIntensity, 0.05f, 1f);
+            circleLight.intensity = lightIntensity;
+            spotLight.intensity = .5f * lightIntensity;
+        }
+        //Camera.main.transform.position = new Vector3(0, Camera.main.transform.position.y, -10);
     }
 
     private void FixedUpdate()
@@ -145,6 +149,22 @@ public class GameManager : MonoBehaviour
 
     void GameOver()
     {
+        if (gameover == false)
+        {
+            gameover = true;
+            //player.controlsLocked = true;
+            player.GameOver();
+            globalLight.intensity = 1;
+            circleLight.intensity = 1;
+            DOTween.To(() => globalLight.intensity, x => globalLight.intensity = x, 0, 2);
+
+            var sequence = DOTween.Sequence();
+            sequence.AppendInterval(1f);
+            sequence.Append(circleLight.transform.DOScale(.2f, 1.5f).SetEase(Ease.InOutQuad));
+            sequence.AppendInterval(.5f);
+            sequence.Append(circleLight.transform.DOScale(0, 1f).SetEase(Ease.InBack));
+            sequence.OnComplete(() => Time.timeScale = 0);
+        }
         
     }
 

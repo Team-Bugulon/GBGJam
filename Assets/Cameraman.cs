@@ -35,7 +35,7 @@ public class Cameraman : MonoBehaviour
         
         CameraTimer += Time.deltaTime;
         //if left click
-        if (Input.GetMouseButtonDown(0) && !GameManager.i.player.stunned && CameraTimer >= CameraCooldown)
+        if (Input.GetMouseButtonDown(0) && !GameManager.i.player.stunned && !GameManager.i.player.controlsLocked && CameraTimer >= CameraCooldown)
         {
             CameraTimer = 0;
             Snap();

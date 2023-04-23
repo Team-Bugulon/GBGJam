@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,7 +26,7 @@ public class Player : MonoBehaviour
     BoxCollider2D cc;
     SpriteRenderer sr;
 
-
+    bool gameover = false;
 
     public void Move(InputAction.CallbackContext ctx)
     {
@@ -51,7 +52,11 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (!stunned)
+        if (gameover)
+        {
+            sr.sprite = sprites[3];
+        }
+        else if (!stunned)
         {
             var diff = (Vector2)(UIManager.i.cursorSprite.transform.position - transform.position);
             if (diff.y > 0)
@@ -131,7 +136,19 @@ public class Player : MonoBehaviour
 
     }
 
-
+    public void GameOver()
+    {
+        if (gameover == false)
+        {
+            movementInput = Vector2.zero;
+            controlsLocked = true;
+            gameover = true;
+            GameManager.i.ShakeScreen();
+            spotLight.SetActive(false);
+            UIManager.i.cursorSprite.enabled = false;
+            transform.DOShakeScale(.6f, .5f, 20);
+        }
+    }
 
     public void Stun(Vector2 collisionDirection)
     {

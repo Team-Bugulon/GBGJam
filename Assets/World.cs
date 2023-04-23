@@ -84,6 +84,10 @@ public class World : MonoBehaviour
     [SerializeField] Tilemap tilemap;
     [SerializeField] Transform groundAnchor;
     [SerializeField] Transform bgContainer;
+    [SerializeField] Transform boat;
+    [SerializeField] Transform sky;
+    [SerializeField] Transform waves;
+    [SerializeField] Transform whateverBG;
 
     [Header("Prefabs")]
     [SerializeField] GameObject BG;
@@ -96,12 +100,56 @@ public class World : MonoBehaviour
     [SerializeField] List<Color> colorDay;
     [SerializeField] List<Color> colorNight;
     [SerializeField] List<Color> colorEvening;
+    [SerializeField] List<Sprite> boatSprites;
+    [SerializeField] List<Sprite> skySprites;
 
     List<List<Chunk>> chunks;
     Vector2Int startingChunk;
 
+    private void Start()
+    {
+        difficulty = TransitionManager.i.Level;
+        depth = 2 + 2 * difficulty;
+        switch (TransitionManager.i.Level % 3)
+        {
+            case (0):
+                GameManager.i.timeOfDay = GameManager.DayTime.Day;
+                break;
+            case (1):
+                GameManager.i.timeOfDay = GameManager.DayTime.Evening;
+                break;
+            case (2):
+                GameManager.i.timeOfDay = GameManager.DayTime.Night;
+                break;
+        }
+        
+        GenerateWorld();
+    }
+
     private void GenerateWorld()
     {
+        switch (GameManager.i.timeOfDay)
+        {
+            case (GameManager.DayTime.Day):
+                boat.GetComponent<SpriteRenderer>().sprite = boatSprites[0];
+                sky.GetComponent<SpriteRenderer>().sprite = skySprites[0];
+                waves.GetComponent<Animator>().Play("water_idle1");
+                whateverBG.GetComponent<SpriteRenderer>().color = colorDay[0];
+                break;
+            case (GameManager.DayTime.Evening):
+                boat.GetComponent<SpriteRenderer>().sprite = boatSprites[1];
+                sky.GetComponent<SpriteRenderer>().sprite = skySprites[1];
+                waves.GetComponent<Animator>().Play("water_idle2");
+                whateverBG.GetComponent<SpriteRenderer>().color = colorEvening[0];
+                break;
+            case (GameManager.DayTime.Night):
+                boat.GetComponent<SpriteRenderer>().sprite = boatSprites[2];
+                sky.GetComponent<SpriteRenderer>().sprite = skySprites[2];
+                waves.GetComponent<Animator>().Play("water_idle3");
+                whateverBG.GetComponent<SpriteRenderer>().color = colorNight[0];
+                break;
+        }
+
         chunks = new List<List<Chunk>>();
 
         for (int y = 0; y < depth; y++)
@@ -150,7 +198,19 @@ public class World : MonoBehaviour
             bg.transform.position = new Vector3(0, -y * 6 * 2 - 8, 0);
             var sr = bg.GetComponentsInChildren<SpriteRenderer>();
             sr[1].sprite = BGSprites[Random.Range(0, BGSprites.Count)];
-            Color cooler = colorDay[Mathf.Min(y + 1, colorDay.Count - 1)];
+            Color cooler = Color.cyan;
+            switch (GameManager.i.timeOfDay)
+            {
+                case (GameManager.DayTime.Day):
+                    cooler = colorDay[Mathf.Min(y + 1, colorDay.Count - 1)];
+                    break;
+                case (GameManager.DayTime.Evening):
+                    cooler = colorEvening[Mathf.Min(y + 1, colorEvening.Count - 1)];
+                    break;
+                case (GameManager.DayTime.Night):
+                    cooler = colorNight[Mathf.Min(y + 1, colorNight.Count - 1)];
+                    break;
+            }
             sr[0].color = cooler;
             sr[1].color = cooler;
             sr[0].sortingOrder += y;
@@ -158,6 +218,7 @@ public class World : MonoBehaviour
         }
 
         if (GameObject.FindGameObjectsWithTag("Mearl").Length < 7) GenerateWorld();
+        TransitionManager.i.TransiOut();
     }
 
     void WorldBorders()
