@@ -13,6 +13,11 @@ public class ButtonCustom : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
     }
 
+    private void OnEnable()
+    {
+        sr.sprite = sprites[0];
+    }
+
     private void OnMouseEnter()
     {
         sr.sprite = sprites[1];
@@ -28,6 +33,12 @@ public class ButtonCustom : MonoBehaviour
     {
         sr.sprite = sprites[2];
         onClick.Invoke();
+        Invoke("ResetHover", .1f);
+    }
+
+    void ResetHover()
+    {
+        sr.sprite = sprites[1];
     }
 
     public UnityEvent onClick;

@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     Rigidbody2D rb;
     BoxCollider2D cc;
     SpriteRenderer sr;
+    public ParticleSystem ps;
 
     bool gameover = false;
     bool win = false;
@@ -132,11 +133,13 @@ public class Player : MonoBehaviour
         {
             if (!SoundManager.i.moveLoop.isPlaying){
                 SoundManager.i.moveLoop.Play();
+                ps.Play();
             }
             
         } else
         {
             SoundManager.i.moveLoop.Stop();
+            ps.Stop();
         }
 
         if (transform.position.y > 0)
@@ -176,6 +179,7 @@ public class Player : MonoBehaviour
             controlsLocked = true;
             UIManager.i.cursorSprite.enabled = false;
             transform.DOShakeScale(.6f, .5f, 20);
+            SoundManager.i.Play("FinalScoreComplete", 0, .7f);
         }
     }
 

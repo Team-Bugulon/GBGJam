@@ -56,6 +56,7 @@ public class Puffer : MonoBehaviour
             GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
             GetComponent<Rigidbody2D>().isKinematic = true;
             GetComponent<CircleCollider2D>().enabled = false;
+            SoundManager.i.Play("Stun1", .2f, .8f);
         }
     }
 

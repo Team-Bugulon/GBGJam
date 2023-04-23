@@ -17,7 +17,7 @@ public class Urchin : MonoBehaviour
             transform.DOComplete();
             transform.DOShakeScale(.6f, .5f, 20);
             Invoke("Unstun", stunDuration);
-
+            SoundManager.i.Play("Stun3", .2f, .8f);
         }
     }
 

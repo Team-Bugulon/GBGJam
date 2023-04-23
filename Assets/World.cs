@@ -126,7 +126,7 @@ public class World : MonoBehaviour
             depth = 5 * difficulty;
         }
         
-        switch (TransitionManager.i.Level % 3)
+        switch ((Mathf.FloorToInt(TransitionManager.i.Level/2) % 3))
         {
             case (0):
                 GameManager.i.timeOfDay = GameManager.DayTime.Day;

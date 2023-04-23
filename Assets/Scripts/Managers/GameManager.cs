@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
         if (uncovered != uncoveredReal)
         {
             UIManager.i.boatui.gameObject.SetActive(true);
-            GameManager.i.boatArrow.SetActive(false);
+            GameManager.i.boatArrow.SetActive(true);
         }
     }
 

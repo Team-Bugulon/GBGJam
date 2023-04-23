@@ -22,6 +22,7 @@ public class Flower : MonoBehaviour
             transform.DOShakeScale(.6f, .5f, 20);
             GetComponent<Animator>().Play("flower_dead");
             Invoke("reload", reloadCooldown);
+            SoundManager.i.Play("PlantOpen", .2f, .8f);
         }
     }
 

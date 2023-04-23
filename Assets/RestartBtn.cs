@@ -26,6 +26,9 @@ public class RestartBtn : MonoBehaviour
                     TransitionManager.i.LoadLevel(0);
                     SoundManager.i.Play("StartGame", 0f, .7f);
                     break;
+                case 3:
+                    SoundManager.i.Play("MenuSelect", .15f, .8f);
+                    break;
             }
         }
 

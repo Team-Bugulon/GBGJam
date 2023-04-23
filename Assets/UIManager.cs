@@ -223,6 +223,7 @@ public class UIManager : MonoBehaviour
 
     void UpdatePercCount(int uncoveredPerc)
     {
+        SoundManager.i.Play("TickPercentage", .1f, .3f);
         percTransform.DOComplete();
         percTransform.DOPunchScale(Vector3.one * .25f, .1f, 10);
         string woubi = uncoveredPerc.ToString();
@@ -282,13 +283,13 @@ public class UIManager : MonoBehaviour
         var text1 = GO_text1.GetComponentsInChildren<TMPro.TextMeshPro>();
         int boba = 0;
         int score = GameManager.i.score;
-        DOTween.To(() => boba, x => { boba = x; text1[0].text = "Score:" + x.ToString(); text1[1].text = "Score:" + x.ToString(); }, score, 2).SetUpdate(true);
+        DOTween.To(() => boba, x => { boba = x; text1[0].text = "Score:" + x.ToString(); text1[1].text = "Score:" + x.ToString(); SoundManager.i.Play("TickGameOver", .1f, .1f); }, score, 2).SetUpdate(true);
         yield return new WaitForSecondsRealtime(2.5f);
         GO_text2.gameObject.SetActive(true);
         var text2 = GO_text2.GetComponentsInChildren<TMPro.TextMeshPro>();
         int boba2 = 0;
         int score2 = TransitionManager.i.BestLevel;
-        DOTween.To(() => boba2, x => { boba2 = x; text2[0].text = "Highscore:" + x.ToString(); text2[1].text = "Highscore:" + x.ToString(); }, score2, 1).SetUpdate(true);
+        DOTween.To(() => boba2, x => { boba2 = x; text2[0].text = "Highscore:" + x.ToString(); text2[1].text = "Highscore:" + x.ToString(); SoundManager.i.Play("TickGameOver", .1f, .1f); }, score2, 1).SetUpdate(true);
         yield return new WaitForSecondsRealtime(1f);
         GO_Buttons.gameObject.SetActive(true);
         GO_Buttons.DOLocalMoveY(0, 1f).SetEase(Ease.OutCubic).SetUpdate(true);

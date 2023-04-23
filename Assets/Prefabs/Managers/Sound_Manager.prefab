@@ -323,6 +323,13 @@ MonoBehaviour:
   - {fileID: 8300000, guid: eb686fefab290ac418a158040099c680, type: 3}
   - {fileID: 8300000, guid: cda3a93e2f1f1b340adf629857875299, type: 3}
   - {fileID: 8300000, guid: b96f901d97f050e4e92a01f525d7c886, type: 3}
+  - {fileID: 8300000, guid: 6d0baf7385db94e4bba34b18ddfdfd18, type: 3}
+  - {fileID: 8300000, guid: 00f15914a475de2408872afa701d75ba, type: 3}
+  - {fileID: 8300000, guid: eb47147e113b1d745b7a0585e6671564, type: 3}
+  - {fileID: 8300000, guid: cb9c2c547ebd41b4699a639cc3cf70ae, type: 3}
+  - {fileID: 8300000, guid: f7555d040355ab54b980815591a7d84d, type: 3}
+  - {fileID: 8300000, guid: e3b73fe7e0bb90b4a99c54fb06bad13d, type: 3}
+  - {fileID: 8300000, guid: fc16955cadf5e7a40802924c64ec2db7, type: 3}
   musics:
   - {fileID: 8300000, guid: c708711d93872dc4a80888f75cbd9c4b, type: 3}
   - {fileID: 8300000, guid: 26feec6b1e3204b41aef4fe0fa8b47e9, type: 3}

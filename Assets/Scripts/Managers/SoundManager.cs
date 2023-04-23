@@ -153,9 +153,12 @@ public class SoundManager : MonoBehaviour
         Debug.Log("gusic " + musicName);
         if (music.volume <= .001f)
         {
-            music.clip = musicsClips[musicName];
-            music.Play();
-            musicPlaying = musicName;
+            if (musicPlaying != musicName)
+            {
+                music.clip = musicsClips[musicName];
+                music.Play();
+                musicPlaying = musicName;
+            }
             MusicIn();
         }
         else if (musicPlaying != musicName)
