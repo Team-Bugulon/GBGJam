@@ -5,9 +5,12 @@ using UnityEngine;
 public class Cameraman : MonoBehaviour
 {
     public float cameraRadius;
+    [SerializeField] float CameraCooldown;
+    
     [SerializeField] CameraTrigger ct;
 
     Camera cameramanCamera;
+    float CameraTimer;
 
     private void Start()
     {
@@ -29,10 +32,12 @@ public class Cameraman : MonoBehaviour
         transform.position = mousePosition + (Vector2)GameManager.i.player.transform.position;
 
         GameManager.i.player.spotLight.transform.localRotation = Quaternion.Euler(0, 0, Mathf.Atan2(mousePosition.y, mousePosition.x) * Mathf.Rad2Deg - 90);
-
+        
+        CameraTimer += Time.deltaTime;
         //if left click
-        if (Input.GetMouseButtonDown(0) && !GameManager.i.player.stunned)
+        if (Input.GetMouseButtonDown(0) && !GameManager.i.player.stunned && CameraTimer >= CameraCooldown)
         {
+            CameraTimer = 0;
             Snap();
         }
     }

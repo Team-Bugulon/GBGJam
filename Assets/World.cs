@@ -236,7 +236,25 @@ public class World : MonoBehaviour
 
                 if (selectedLevel.level[readX + y*6] == '#')
                 {
-                    tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[1]);
+                    if (chunkPosY < 4)
+                    {
+                        tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[1]);
+                    } else if (chunkPosY > 6)
+                    {
+                        tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[7]);
+                    } else
+                    {
+                        if (Random.Range(0,2) == 0)
+                        {
+                            tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[1]);
+                        } else
+                        {
+                            tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[7]);
+                        }
+                        
+                    }
+
+
                 } else if (selectedLevel.level[readX + y * 6] == 'o')
                 {
                     tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y)), tiles[2]);
