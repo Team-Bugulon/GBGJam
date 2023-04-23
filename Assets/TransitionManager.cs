@@ -42,6 +42,7 @@ public class TransitionManager : MonoBehaviour
 
     public void TransiIn()
     {
+        SoundManager.i.MusicOut();
         transi.DOKill();
         transi.position = new Vector2(40, Camera.main.transform.position.y);
         transi.DOMoveX(0, 1.5f).SetEase(Ease.InOutCubic).SetUpdate(true);
@@ -54,8 +55,8 @@ public class TransitionManager : MonoBehaviour
         transi.position = new Vector2(0, Camera.main.transform.position.y);
         var sequence = DOTween.Sequence();
         sequence.AppendInterval(wait);
+        sequence.Append(transi.DOMove(Vector3.zero, 0f));
         sequence.Append(transi.DOMoveX(-40, 1.5f).SetEase(Ease.InOutCirc).SetUpdate(true));
-        
     }
 
     public void NextLevel()

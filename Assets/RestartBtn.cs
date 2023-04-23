@@ -16,12 +16,15 @@ public class RestartBtn : MonoBehaviour
             {
                 case 0:
                     TransitionManager.i.LoadLevel(0);
+                    SoundManager.i.Play("StartGame", 0f, .7f);
                     break;
                 case 1:
                     TransitionManager.i.MainMenu();
+                    SoundManager.i.Play("MenuSelect", .15f, .8f);
                     break;
                 case 2:
                     TransitionManager.i.LoadLevel(0);
+                    SoundManager.i.Play("StartGame", 0f, .7f);
                     break;
             }
         }

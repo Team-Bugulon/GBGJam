@@ -109,7 +109,23 @@ public class World : MonoBehaviour
     private void Start()
     {
         difficulty = TransitionManager.i.Level;
-        depth = 2 + 2 * difficulty;
+        if (difficulty == 0)
+        {
+            depth = 2;
+        }
+        else if (difficulty <= 5)
+        {
+            depth = 1 + 3 * difficulty;
+        } 
+        else if (difficulty <= 10)
+        {
+            depth = 4 * difficulty;
+        } 
+        else
+        {
+            depth = 5 * difficulty;
+        }
+        
         switch (TransitionManager.i.Level % 3)
         {
             case (0):
@@ -224,6 +240,20 @@ public class World : MonoBehaviour
         if (GameObject.FindGameObjectsWithTag("Mearl").Length < 7) GenerateWorld();
         
         TransitionManager.i.TransiOut(1f);
+
+        switch (GameManager.i.timeOfDay)
+        {
+            case (GameManager.DayTime.Day):
+                SoundManager.i.PlayMusic("Day");
+                break;
+            case (GameManager.DayTime.Evening):
+                SoundManager.i.PlayMusic("Evening");
+                break;
+            case (GameManager.DayTime.Night):
+                SoundManager.i.PlayMusic("Night");
+                break;
+        }
+
     }
 
     void WorldBorders()

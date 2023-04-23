@@ -9,6 +9,7 @@ public class Energy : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             GameManager.i.Recharge();
+            SoundManager.i.Play("BatteryPickup", 0f, .8f);
             Destroy(this.gameObject);
         }
     }

@@ -117,7 +117,9 @@ public class UIManager : MonoBehaviour
 
     public void GiveBackPic()
     {
+        SoundManager.i.Play("PaperAlt", .1f, .8f);
         UIManager.i.boatui.gameObject.SetActive(false);
+        GameManager.i.boatArrow.SetActive(false);
         photo1.gameObject.SetActive(false);
         photo2.gameObject.SetActive(false);
         photo3.gameObject.SetActive(false);
@@ -175,6 +177,7 @@ public class UIManager : MonoBehaviour
         {
             givebackpicsbool = true;
             photoQty = Mathf.Min(10, photoQty);
+            if (GameManager.i.uncovered != GameManager.i.uncoveredReal) SoundManager.i.Play("Deposit", 0f, .8f);
             StartCoroutine(GiveBackPicsCoroutine());
         }
     }
@@ -209,6 +212,7 @@ public class UIManager : MonoBehaviour
 
         GameManager.i.uncovered = GameManager.i.uncoveredReal;
         UIManager.i.boatui.gameObject.SetActive(false);
+        GameManager.i.boatArrow.SetActive(false);
         givebackpicsbool = false;
 
         if (GameManager.i.uncovered >= .99f)
@@ -279,7 +283,7 @@ public class UIManager : MonoBehaviour
         int boba = 0;
         int score = GameManager.i.score;
         DOTween.To(() => boba, x => { boba = x; text1[0].text = "Score:" + x.ToString(); text1[1].text = "Score:" + x.ToString(); }, score, 2).SetUpdate(true);
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSecondsRealtime(2.5f);
         GO_text2.gameObject.SetActive(true);
         var text2 = GO_text2.GetComponentsInChildren<TMPro.TextMeshPro>();
         int boba2 = 0;

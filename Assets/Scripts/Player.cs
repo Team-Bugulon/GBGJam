@@ -128,6 +128,17 @@ public class Player : MonoBehaviour
             rb.velocity = actualSpeed;
         }
 
+        if (movementInput.magnitude > 0)
+        {
+            if (!SoundManager.i.moveLoop.isPlaying){
+                SoundManager.i.moveLoop.Play();
+            }
+            
+        } else
+        {
+            SoundManager.i.moveLoop.Stop();
+        }
+
         if (transform.position.y > 0)
         {
             transform.position = new Vector3(transform.position.x, -0.1f, transform.position.z);
@@ -144,6 +155,7 @@ public class Player : MonoBehaviour
     {
         if (gameover == false && win == false)
         {
+            SoundManager.i.Play("PowerDown", 0f, .8f);
             movementInput = Vector2.zero;
             controlsLocked = true;
             gameover = true;
@@ -178,6 +190,7 @@ public class Player : MonoBehaviour
         //movementInput = Vector2.zero;
         rb.AddForce(-collisionDirection * collisionForce);
         GameManager.i.ShakeScreen();
+        SoundManager.i.Play("Damage2", .1f, .8f);
         StartCoroutine(StunTimer());
     }
 

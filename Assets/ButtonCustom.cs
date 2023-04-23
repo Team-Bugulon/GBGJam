@@ -16,6 +16,7 @@ public class ButtonCustom : MonoBehaviour
     private void OnMouseEnter()
     {
         sr.sprite = sprites[1];
+        SoundManager.i.Play("MenuMove", .15f, .8f);
     }
 
     private void OnMouseExit()

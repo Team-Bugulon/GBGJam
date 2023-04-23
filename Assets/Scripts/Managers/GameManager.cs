@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
     public Light2D globalLight;
     public Light2D spotLight;
     public Light2D circleLight;
+    public GameObject boatArrow;
 
 
     bool gameover = false;
@@ -85,6 +86,7 @@ public class GameManager : MonoBehaviour
         if (uncovered != uncoveredReal)
         {
             UIManager.i.boatui.gameObject.SetActive(true);
+            GameManager.i.boatArrow.SetActive(false);
         }
     }
 
@@ -106,17 +108,28 @@ public class GameManager : MonoBehaviour
         //Camera.main.transform.position = new Vector3(0, Camera.main.transform.position.y, -10);
     }
 
+    private void Start()
+    {
+        SoundManager.i.BGFadeIn(0);
+        SoundManager.i.BGFadeOut(1);
+        boatArrow.SetActive(false);
+    }
+
     private void FixedUpdate()
     {
         if (player.transform.position.y < -4 && playerUnderwater == false)
         {
             playerUnderwater = true;
+            SoundManager.i.BGFadeIn(1);
+            SoundManager.i.BGFadeOut(0);
             UIManager.i.batteryTransform.transform.DOShakeRotation(.5f, .75f, 20).SetEase(Ease.OutCubic).SetLoops(-1);
             UIManager.i.ByeCounter();
         }
         else if (player.transform.position.y >= -4 && playerUnderwater == true)
         {
             playerUnderwater = false;
+            SoundManager.i.BGFadeIn(0);
+            SoundManager.i.BGFadeOut(1);
             UIManager.i.batteryTransform.transform.DOKill();
             //UIManager.i.batteryMain.transform.localPosition = new Vector2(-10.375f, 5f);
             UIManager.i.batteryTransform.localPosition = Vector2.zero;
@@ -156,7 +169,11 @@ public class GameManager : MonoBehaviour
         {
             gameover = true;
 
-            score = Mathf.Max(50, TransitionManager.i.Level * 100 + Mathf.Clamp(Mathf.FloorToInt(uncovered * 100), 0, 99));
+            SoundManager.i.MusicOut();
+            SoundManager.i.BGFadeOut(0);
+            SoundManager.i.BGFadeOut(1);
+
+            score = Mathf.Max(50, TransitionManager.i.Level * 100 + Mathf.Clamp(Mathf.FloorToInt(uncoveredReal * 100), 0, 99));
             if (score > TransitionManager.i.BestLevel)
             {
                 TransitionManager.i.BestLevel = score;
@@ -178,6 +195,7 @@ public class GameManager : MonoBehaviour
                 {
                     Time.timeScale = 0;
                     UIManager.i.GameOverScreen();
+                    SoundManager.i.PlayMusic("GameOver");
                 }
             );
         }
@@ -189,6 +207,8 @@ public class GameManager : MonoBehaviour
         if (win == false)
         {
             win = true;
+            SoundManager.i.BGFadeOut(0);
+            SoundManager.i.BGFadeOut(1);
             player.Win();
             var sequence = DOTween.Sequence();
             sequence.AppendInterval(.8f);

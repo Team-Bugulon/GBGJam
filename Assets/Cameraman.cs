@@ -44,6 +44,7 @@ public class Cameraman : MonoBehaviour
 
     public void Snap()
     {
+        SoundManager.i.Play("Camera", .15f, .8f);
         cameramanCamera.gameObject.SetActive(true);
         cameramanCamera.Render();
         cameramanCamera.gameObject.SetActive(false);

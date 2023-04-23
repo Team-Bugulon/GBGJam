@@ -21,6 +21,7 @@ public class SoundManager : MonoBehaviour
         {
             _i = this;
             DontDestroyOnLoad(gameObject);
+            Init();
         }
         else
         {
@@ -32,19 +33,61 @@ public class SoundManager : MonoBehaviour
     [SerializeField] List<AudioClip> audios;
     Dictionary<string, AudioClip> audioClips;
 
+    [SerializeField] List<AudioClip> musics;
+    Dictionary<string, AudioClip> musicsClips;
+
     AudioSource aSource;
 
     [SerializeField] AudioSource loopScore;
+    public AudioSource moveLoop;
+    public AudioSource surfaceBG;
+    public AudioSource waterBG;
     [SerializeField] AudioSource music;
 
+    string musicPlaying = "";
+
+    public void BGFadeIn(int id = 0)
+    {
+        if (id == 0)
+        {
+            surfaceBG.DOKill();
+            surfaceBG.DOFade(.15f, 1).SetEase(Ease.Linear).SetUpdate(true);
+        } else
+        {
+            waterBG.DOKill();
+            waterBG.DOFade(.2f, 1).SetEase(Ease.Linear).SetUpdate(true);
+        }
+    }
+
+    public void BGFadeOut(int id = 0)
+    {
+        if (id == 0)
+        {
+            surfaceBG.DOKill();
+            surfaceBG.DOFade(0, 1).SetEase(Ease.Linear).SetUpdate(true);
+        }
+        else
+        {
+            waterBG.DOKill();
+            waterBG.DOFade(0, 1).SetEase(Ease.Linear).SetUpdate(true);
+        }
+    }
+
     // Start is called before the first frame update
-    void Start()
+    void Init()
     {
         audioClips = new Dictionary<string, AudioClip>();
 
         foreach (var audio in audios)
         {
             audioClips[audio.name] = audio;
+        }
+
+        musicsClips = new Dictionary<string, AudioClip>();
+
+        foreach (var audio in musics)
+        {
+            musicsClips[audio.name] = audio;
         }
 
         aSource = GetComponent<AudioSource>();
@@ -102,7 +145,32 @@ public class SoundManager : MonoBehaviour
     public void MusicOut()
     {
         music.DOKill();
-        music.DOFade(0, 1).SetEase(Ease.Linear).SetUpdate(true);
+        music.DOFade(0, 2).SetEase(Ease.Linear).SetUpdate(true);
+    }
+
+    public void PlayMusic(string musicName)
+    {
+        Debug.Log("gusic " + musicName);
+        if (music.volume <= .001f)
+        {
+            music.clip = musicsClips[musicName];
+            music.Play();
+            musicPlaying = musicName;
+            MusicIn();
+        }
+        else if (musicPlaying != musicName)
+        {
+            Debug.Log("gusic " + musicName);
+            music.DOKill();
+            music.DOFade(0, 1).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            {
+                music.clip = musicsClips[musicName];
+                music.Play();
+                musicPlaying = musicName;
+                MusicIn();
+            });
+            
+        }
     }
 
 }
