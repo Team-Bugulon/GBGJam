@@ -44,7 +44,7 @@ public class SaveManager : MonoBehaviour
     public void Save()
     {
         Save_Data data = new Save_Data();
-        //data.highscore = GameManager.i.highscore;
+        data.highscore = TransitionManager.i.BestLevel;
 
         string json = JsonUtility.ToJson(data);
         PlayerPrefs.SetString("save", json);
@@ -56,7 +56,7 @@ public class SaveManager : MonoBehaviour
         {
             string json = PlayerPrefs.GetString("save");
             Save_Data data = JsonUtility.FromJson<Save_Data>(json);
-            //GameManager.i.highscore = data.highscore;
+            TransitionManager.i.BestLevel = data.highscore;
         }
         else
         {

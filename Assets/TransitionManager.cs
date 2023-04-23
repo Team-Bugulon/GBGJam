@@ -33,7 +33,13 @@ public class TransitionManager : MonoBehaviour
 
     [SerializeField] Transform transi;
     public int Level = 0;
-    
+    public int BestLevel = 0;
+
+    private void Start()
+    {
+        SaveManager.i.Load();
+    }
+
     public void TransiIn()
     {
         transi.DOKill();
@@ -61,12 +67,27 @@ public class TransitionManager : MonoBehaviour
         StartCoroutine(LoadLevelCoroutine());
     }
 
-    IEnumerator LoadLevelCoroutine(int level = 0)
+    IEnumerator LoadLevelCoroutine()
     {
         TransiIn();
         yield return new WaitForSecondsRealtime(2f);
         //reload scene
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
         //TransiOut();
+    }
+
+    public void MainMenu()
+    {
+        Level = 0;
+        StartCoroutine(MainMenuCoroutine());
+    }
+
+    IEnumerator MainMenuCoroutine()
+    {
+        TransiIn();
+        yield return new WaitForSecondsRealtime(2f);
+        //reload scene
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        TransiOut();
     }
 }

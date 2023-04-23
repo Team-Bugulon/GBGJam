@@ -147,11 +147,20 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public int score;
     void GameOver()
     {
         if (gameover == false)
         {
             gameover = true;
+
+            score = Mathf.Max(50, TransitionManager.i.Level * 100 + Mathf.Clamp(Mathf.FloorToInt(uncovered * 100), 0, 99));
+            if (score > TransitionManager.i.BestLevel)
+            {
+                TransitionManager.i.BestLevel = score;
+                SaveManager.i.Save();
+            }
+
             //player.controlsLocked = true;
             player.GameOver();
             globalLight.intensity = 1;
@@ -163,20 +172,25 @@ public class GameManager : MonoBehaviour
             sequence.Append(circleLight.transform.DOScale(.2f, 1.5f).SetEase(Ease.InOutQuad));
             sequence.AppendInterval(.5f);
             sequence.Append(circleLight.transform.DOScale(0, 1f).SetEase(Ease.InBack));
-            sequence.OnComplete(() => Time.timeScale = 0);
+            sequence.OnComplete(() =>
+                {
+                    Time.timeScale = 0;
+                    UIManager.i.GameOverScreen();
+                }
+            );
         }
         
     }
 
-    public void Restart()
-    {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
-    }
+    //public void Restart()
+    //{
+    //    UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    //}
 
-    public void Quit()
-    {
-        Application.Quit();
-    }
+    //public void Quit()
+    //{
+    //    Application.Quit();
+    //}
 
     public void ShakeScreen(float duration = .35f, float strength = 5f, int vibrato = 20, DG.Tweening.Ease ease = Ease.OutExpo)
     {
