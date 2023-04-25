@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System;
-using UnityEngine.SocialPlatforms.Impl;
-using System.Diagnostics.Tracing;
-using static UnityEditor.PlayerSettings;
-
 public class UIManager : MonoBehaviour
 {
     private static UIManager _i;

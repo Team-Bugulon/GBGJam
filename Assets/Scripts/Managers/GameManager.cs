@@ -5,7 +5,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 using UnityEngine.Rendering.Universal;
-using static UnityEditor.PlayerSettings;
 
 public class GameManager : MonoBehaviour
 {
