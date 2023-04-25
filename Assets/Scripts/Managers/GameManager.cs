@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 using UnityEngine.Rendering.Universal;
+using static UnityEditor.PlayerSettings;
 
 public class GameManager : MonoBehaviour
 {
@@ -216,7 +217,14 @@ public class GameManager : MonoBehaviour
             player.Win();
             var sequence = DOTween.Sequence();
             sequence.AppendInterval(.8f);
-            sequence.Append(player.transform.parent.DOScale(2f, 1.75f).SetEase(Ease.InOutQuart));
+            //const float pixelSize = 1f / 64f;
+            //sequence.Append(player.transform.parent.DOScale(2f, 1.75f).SetEase(Ease.InOutQuart).OnUpdate(() =>
+            //{
+            //    player.transform.parent.localScale = Mathf.RoundToInt(player.transform.parent.localScale.x / pixelSize) * pixelSize * Vector3.one;
+            //}
+            //));
+            sequence.Append(player.transform.parent.DOScale(2f, 1.5f).SetEase(Ease.InOutQuart));
+
             sequence.OnComplete(() =>
             {
                 //Time.timeScale = 0;

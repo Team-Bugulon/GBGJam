@@ -11,7 +11,7 @@ public class LockCameraZ : CinemachineExtension
 {
     [Tooltip("Lock the camera's Z position to this value")]
     public float m_ZPosition = 10;
-    
+    const float pixelSize = 1f / 16f;
     protected override void PostPipelineStageCallback(
         CinemachineVirtualCameraBase vcam,
         CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
@@ -21,6 +21,7 @@ public class LockCameraZ : CinemachineExtension
             var pos = state.RawPosition;
             //pos.z = m_ZPosition;
             pos.x = m_ZPosition;
+            pos.y = Mathf.RoundToInt(pos.y / pixelSize) * pixelSize;
             state.RawPosition = pos;
         }
     }

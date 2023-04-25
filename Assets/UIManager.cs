@@ -4,6 +4,8 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 using UnityEngine.SocialPlatforms.Impl;
+using System.Diagnostics.Tracing;
+using static UnityEditor.PlayerSettings;
 
 public class UIManager : MonoBehaviour
 {
@@ -250,10 +252,11 @@ public class UIManager : MonoBehaviour
     bool byeCounter = false;
     public void ByeCounter()
     {
+        const float pixelSize = 1f / 16f;
         if (byeCounter == false)
         {
             byeCounter = true;
-            LevelCounter.DOLocalMoveY(4, 1.5f).SetEase(Ease.InBack);
+            LevelCounter.DOLocalMoveY(4, 1.5f).SetEase(Ease.InBack).OnUpdate(() => LevelCounter.localPosition = new Vector2(LevelCounter.localPosition.x, Mathf.RoundToInt(LevelCounter.localPosition.y / pixelSize) * pixelSize));
         }
     }
 
