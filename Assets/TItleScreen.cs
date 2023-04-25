@@ -17,6 +17,8 @@ public class TItleScreen : MonoBehaviour
         Debug.Log("TitleScreen.Start()");
         SoundManager.i.PlayMusic("Title");
         TutoCanvas.SetActive(false);
+        //embed package
+        //UnityEditor.PackageManager.Client.Embed("com.unity.render-pipelines.universal");
     }
 
     public void TutoBtnNext()

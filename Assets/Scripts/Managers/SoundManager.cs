@@ -139,7 +139,7 @@ public class SoundManager : MonoBehaviour
 
     public void MusicIn()
     {
-        music.DOKill();
+        music.DOComplete();
         music.DOFade(.8f, 1).SetEase(Ease.Linear).SetUpdate(true);
     }
     public void MusicOut()
@@ -151,7 +151,7 @@ public class SoundManager : MonoBehaviour
     public void PlayMusic(string musicName)
     {
         Debug.Log("gusic " + musicName);
-        if (music.volume <= .001f)
+        if (music.volume <= .05f)
         {
             if (musicPlaying != musicName)
             {

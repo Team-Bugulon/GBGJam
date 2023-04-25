@@ -57,6 +57,10 @@ public class GameManager : MonoBehaviour
     public Light2D circleLight;
     public GameObject boatArrow;
 
+    [Header("Tiles")]
+    public List<Sprite> tilesSprites;
+
+
 
     bool gameover = false;
     bool win = false;

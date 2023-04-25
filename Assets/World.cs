@@ -235,11 +235,17 @@ public class World : MonoBehaviour
             sr[1].color = cooler;
             sr[0].sortingOrder += y;
             sr[1].sortingOrder += y;
+            var ps = bg.GetComponentInChildren<ParticleSystem>();
+            //set color
+            var main = ps.main;
+            main.startColor = cooler;
+            //set rendering layer
+            var rd = ps.GetComponent<Renderer>();
         }
 
         if (GameObject.FindGameObjectsWithTag("Mearl").Length < 7) GenerateWorld();
         
-        TransitionManager.i.TransiOut(1f);
+        TransitionManager.i.TransiOut(1.5f);
 
         switch (GameManager.i.timeOfDay)
         {
@@ -350,6 +356,18 @@ public class World : MonoBehaviour
 
                     }
 
+                    //check if tile above is empty
+                    if (!tilemap.HasTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y + 1))) && Random.Range(0, 5) == 0)
+                    {
+                        //if (Random.Range(0, 5) == 0)
+                        //{
+                        //    tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y + 1)), tiles[9]);
+                        //} else
+                        //{
+                        tilemap.SetTile((Vector3Int)(worldChunkPos + new Vector2Int(x, -y + 1)), tiles[8]);
+                        //}
+
+                    }
 
                 } else if (selectedLevel.level[readX + y * 6] == 'o')
                 {

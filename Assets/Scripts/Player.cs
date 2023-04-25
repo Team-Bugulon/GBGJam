@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     Vector2 movementInput;
     Vector2 actualSpeed;
     Rigidbody2D rb;
-    BoxCollider2D cc;
+    CircleCollider2D cc;
     SpriteRenderer sr;
     public ParticleSystem ps;
 
@@ -44,7 +44,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        cc = GetComponent<BoxCollider2D>();
+        cc = GetComponent<CircleCollider2D>();
         sr = GetComponent<SpriteRenderer>();
         //make material unique
         sr.material = new Material(sr.material);
